@@ -1,101 +1,109 @@
-import Image from "next/image";
+"use client";
+import { useEffect, useState } from "react";
+import { Search } from "./components/Search";
+// Definir un tipo para los datos que vamos a recibir de la API
+interface Bookmark {
+  id: string; // Asumimos que la API devuelve un ID único para cada bookmark
+  url: string;
+  titulo: string;
+  imagen: string;
+}
 
 export default function Home() {
+  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
+
+  useEffect(() => {
+    // Función para obtener los datos
+    const fetchBookmarks = async () => {
+      try {
+        const response = await fetch(
+          "https://socketserver-u5si.onrender.com/api/bookmarks/obtener"
+        );
+        if (!response.ok) {
+          throw new Error("No se pudo obtener la información.");
+        }
+        const data = await response.json();
+        setBookmarks(data); // Suponiendo que la API devuelve un array de bookmarks
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookmarks();
+  }, []);
+
+  // Función para eliminar un bookmark
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await fetch(
+        `https://socketserver-u5si.onrender.com/api/bookmarks/eliminar/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al eliminar el bookmark.");
+      }
+
+      // Filtrar el estado para eliminar el bookmark de la lista
+      setBookmarks(bookmarks.filter((bookmark) => bookmark.id !== id));
+    } catch (err: any) {
+      alert(err.message);
+    }
+  };
+
+  if (loading) return <div>Cargando...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+        <Search />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
+          {bookmarks.length > 0 ? (
+            bookmarks.map((bookmark) => (
+              <div
+                key={bookmark.id}
+                className="relative p-4 rounded-[30] overflow-hidden h-auto bg-opacity"
+              >
+                {/* Card clickeable */}
+                <a
+                  href={bookmark.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block hover:opacity-80 transition-opacity o"
+                >
+                  <img
+                    src={bookmark.imagen}
+                    alt={bookmark.titulo}
+                    className="mt-2 w-full h-auto rounded-[10]"
+                  />
+                  <h3 className="text-lg font-[500] mt-4 truncate capitalize text-white">
+                    {bookmark.titulo}
+                  </h3>
+                  <p className="text-[0.6rem] text-zinc-700 truncate">
+                    {bookmark.url}
+                  </p>
+                </a>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+                <button
+                  onClick={() => handleDelete(bookmark.id)}
+                  className="  text-white  py-1 rounded-full text-xs hover:bg-customColor1 hover:text-black hover:px-3  transition-all mt-3"
+                >
+                  Eliminar
+                </button>
+              </div>
+            ))
+          ) : (
+            <p>No hay bookmarks disponibles.</p>
+          )}
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
