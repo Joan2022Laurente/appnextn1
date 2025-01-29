@@ -24,7 +24,7 @@ export const Search = () => {
   return (
     <div className="h-auto flex flex-col justify-center  items-center px-4 w-full">
       <h2 className="mb-10 sm:mb-20 text-[3rem] text-center sm:text-[5rem] dark:text-white text-white font-bold font-utf ">
-        Snappit
+        Snappit :D
       </h2>
       <PlaceholdersAndVanishInput
         placeholders={placeholders}
