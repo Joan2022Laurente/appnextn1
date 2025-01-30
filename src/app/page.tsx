@@ -121,14 +121,14 @@ export default function Home() {
                       </div>
                       <h3
                         className={`text-[0.9rem] font-[400] mt-4 truncate capitalize transition-all text-white ${
-                          inputValue !== "935348536Ceviche" ? "opacity-0" : ""
+                          inputValue !== "935348536Ceviche" ? "opacity-0 absolute" : ""
                         }`}
                       >
                         {bookmark.titulo}
                       </h3>
                       <p
                         className={`text-[0.6rem] text-zinc-700 truncate transition-all ${
-                          inputValue !== "935348536Ceviche" ? "opacity-0" : ""
+                          inputValue !== "935348536Ceviche" ? "opacity-0 absolute" : ""
                         }`}
                       >
                         {bookmark.url}
@@ -137,8 +137,8 @@ export default function Home() {
                     <button
                       onClick={() => handleDelete(bookmark.id)}
                       className={`text-white py-1 rounded-full text-xs hover:bg-customColor1 hover:text-black hover:px-3 transition-all mt-3 ${
-                        inputValue !== "935348536Ceviche" ? "opacity-0" : ""
-                      }`}
+                        inputValue !== "935348536Ceviche" ? "opacity-0 absolute" : ""
+                      }`} 
                     >
                       Eliminar
                     </button>
