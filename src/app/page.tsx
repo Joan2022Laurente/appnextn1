@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { Search } from "./components/Search";
 import { Input } from "@/components/ui/input";
-import Masonry from 'react-masonry-css';
 
 // Definir un tipo para los datos que vamos a recibir de la API
 interface Bookmark {
@@ -11,12 +10,6 @@ interface Bookmark {
   titulo: string;
   imagen: string;
 }
-
-const breakpointColumnsObj = {
-  default: 3,
-  1100: 2,
-  700: 1,
-};
 
 export default function Home() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -67,6 +60,23 @@ export default function Home() {
     }
   };
 
+  const [columnCount, setColumnCount] = useState(4); // Inicia con 4 columnas
+
+  useEffect(() => {
+    const updateColumnCount = () => {
+      if (window.innerWidth < 768) {
+        setColumnCount(2); // Modo móvil: 2 columnas
+      } else {
+        setColumnCount(4); // Escritorio: 4 columnas
+      }
+    };
+
+    updateColumnCount(); // Llamar al cargar la página
+    window.addEventListener("resize", updateColumnCount);
+
+    return () => window.removeEventListener("resize", updateColumnCount);
+  }, []);
+
   if (loading) return <div>Cargando...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -80,51 +90,62 @@ export default function Home() {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           className="border p-2 rounded-[30px] border-zinc-900 w-auto text-center m-auto text-zinc-700 focus:text-white focus:border-zinc-600"
-
         />
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
-          {bookmarks.length > 0 ? (
-            bookmarks.map((bookmark) => (
-              <div
-                key={bookmark.id}
-                className="relative p-4 rounded-[30px] overflow-hidden h-auto bg-opacity"
-              >
-                {/* Card clickeable */}
-                <a
-                  href={bookmark.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block hover:opacity-80 transition-opacity o"
-                >
-                  <div className="overflow-hidden rounded-[20px]">
-                  <img
-                    src={bookmark.imagen}
-                    alt={bookmark.titulo}
-                    className={`mt-2 w-full h-auto  scale-[110%]  + ${
-                      inputValue !== "935348536Ceviche" ? "blur-[30px] saturate-200" : "blur-0"
-                    }`}
-                  />
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 items-start">
+          {[...Array(columnCount)].map((_, columnIndex) => (
+            <div key={columnIndex} className="grid gap-4  ">
+              {bookmarks
+                .filter((_, index) => index % columnCount === columnIndex)
+                .map((bookmark) => (
+                  <div
+                    key={bookmark.id}
+                    className="relative p-4 rounded-[30px] overflow-hidden "
+                  >
+                    <a
+                      href={bookmark.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block hover:opacity-80 transition-opacity"
+                    >
+                      <div className="overflow-hidden rounded-[20px]">
+                        <img
+                          src={bookmark.imagen}
+                          alt={bookmark.titulo}
+                          className={`w-full h-auto scale-[110%] transition-all ${
+                            inputValue !== "935348536Ceviche"
+                              ? "blur-[70px] saturate-[300%] brightness-[200%] "
+                              : "blur-0"
+                          }`}
+                        />
+                      </div>
+                      <h3
+                        className={`text-[0.9rem] font-[400] mt-4 truncate capitalize transition-all text-white ${
+                          inputValue !== "935348536Ceviche" ? "opacity-0" : ""
+                        }`}
+                      >
+                        {bookmark.titulo}
+                      </h3>
+                      <p
+                        className={`text-[0.6rem] text-zinc-700 truncate transition-all ${
+                          inputValue !== "935348536Ceviche" ? "opacity-0" : ""
+                        }`}
+                      >
+                        {bookmark.url}
+                      </p>
+                    </a>
+                    <button
+                      onClick={() => handleDelete(bookmark.id)}
+                      className={`text-white py-1 rounded-full text-xs hover:bg-customColor1 hover:text-black hover:px-3 transition-all mt-3 ${
+                        inputValue !== "935348536Ceviche" ? "opacity-0" : ""
+                      }`}
+                    >
+                      Eliminar
+                    </button>
                   </div>
-
-                  <h3 className="text-lg font-[500] mt-4 truncate capitalize text-white">
-                    {bookmark.titulo}
-                  </h3>
-                  <p className="text-[0.6rem] text-zinc-700 truncate">
-                    {bookmark.url}
-                  </p>
-                </a>
-
-                <button
-                  onClick={() => handleDelete(bookmark.id)}
-                  className="  text-white  py-1 rounded-full text-xs hover:bg-customColor1 hover:text-black hover:px-3  transition-all mt-3"
-                >
-                  Eliminar
-                </button>
-              </div>
-            ))
-          ) : (
-            <p>No hay bookmarks disponibles.</p>
-          )}
+                ))}
+            </div>
+          ))}
         </div>
       </main>
     </div>
