@@ -99,7 +99,7 @@ export default function Home() {
                   <img
                     src={bookmark.imagen}
                     alt={bookmark.titulo}
-                    className={`mt-2 w-full h-auto rounded-[10] + ${
+                    className={`mt-2 w-full h-auto rounded-[30px] + ${
                       inputValue !== "935348536Ceviche" ? "blur-[60px] saturate-200" : "blur-0"
                     }`}
                   />
