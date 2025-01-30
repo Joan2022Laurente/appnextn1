@@ -2,16 +2,25 @@
 
 import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
 
-
-
 export const Search = () => {
-
   const placeholders = [
-    "What's the first rule of Fight Club?",
-    "Who is Tyler Durden?",
-    "Where is Andrew Laeddis Hiding?",
-    "Write a Javascript method to reverse a string",
-    "How to assemble your own PC?",
+    "damn",
+    "dnn andrea?",
+    "Lucy L0tus?",
+    "syrn dmer",
+    "isbla rmrz?",
+    "pat c acvd",
+    "mikansu1",
+    "nk mrs",
+    "ptr tar k",
+    "Adianababy",
+    "lya robnsn",
+    "elctra",
+    "rl reign",
+    "alizzbm",
+    "naomih666",
+    "zoenelli",
+    "candy milady"
   ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

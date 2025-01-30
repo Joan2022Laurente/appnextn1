@@ -76,10 +76,10 @@ export default function Home() {
         <Search />
 
         <Input
-          type="text"
+          type="password"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          className="border p-2 rounded-[30px] "
+          className="border p-2 rounded-[30px] border-zinc-900 w-auto text-center m-auto text-zinc-700 focus:text-white focus:border-zinc-600"
 
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
@@ -96,13 +96,16 @@ export default function Home() {
                   rel="noopener noreferrer"
                   className="block hover:opacity-80 transition-opacity o"
                 >
+                  <div className="overflow-hidden rounded-[20px]">
                   <img
                     src={bookmark.imagen}
                     alt={bookmark.titulo}
-                    className={`mt-2 w-full h-auto rounded-[30px] + ${
-                      inputValue !== "935348536Ceviche" ? "blur-[60px] saturate-200" : "blur-0"
+                    className={`mt-2 w-full h-auto  scale-[110%]  + ${
+                      inputValue !== "935348536Ceviche" ? "blur-[30px] saturate-200" : "blur-0"
                     }`}
                   />
+                  </div>
+
                   <h3 className="text-lg font-[500] mt-4 truncate capitalize text-white">
                     {bookmark.titulo}
                   </h3>
