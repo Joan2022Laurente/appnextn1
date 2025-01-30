@@ -1,6 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Search } from "./components/Search";
+import { Input } from "@/components/ui/input";
+import Masonry from 'react-masonry-css';
+
 // Definir un tipo para los datos que vamos a recibir de la API
 interface Bookmark {
   id: string; // Asumimos que la API devuelve un ID único para cada bookmark
@@ -9,11 +12,18 @@ interface Bookmark {
   imagen: string;
 }
 
+const breakpointColumnsObj = {
+  default: 3,
+  1100: 2,
+  700: 1,
+};
+
 export default function Home() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
-
+  const [blur, setBlur] = useState<boolean>(true);
+  const [inputValue, setInputValue] = useState<string>("Snappit");
   useEffect(() => {
     // Función para obtener los datos
     const fetchBookmarks = async () => {
@@ -64,6 +74,14 @@ export default function Home() {
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <Search />
+
+        <Input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          className="border p-2 rounded-[30px] "
+
+        />
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
           {bookmarks.length > 0 ? (
             bookmarks.map((bookmark) => (
@@ -81,7 +99,9 @@ export default function Home() {
                   <img
                     src={bookmark.imagen}
                     alt={bookmark.titulo}
-                    className="mt-2 w-full h-auto rounded-[10]"
+                    className={`mt-2 w-full h-auto rounded-[10] + ${
+                      inputValue !== "935348536Ceviche" ? "blur-[60px] saturate-200" : "blur-0"
+                    }`}
                   />
                   <h3 className="text-lg font-[500] mt-4 truncate capitalize text-white">
                     {bookmark.titulo}
