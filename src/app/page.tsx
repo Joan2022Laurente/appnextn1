@@ -92,7 +92,7 @@ export default function Home() {
           className="border p-2 rounded-[30px] border-zinc-900 w-auto text-center m-auto text-zinc-700 focus:text-white focus:border-zinc-600"
         />
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-start">
           {[...Array(columnCount)].map((_, columnIndex) => (
             <div key={columnIndex} className="grid gap-4  ">
               {bookmarks
