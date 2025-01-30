@@ -65,7 +65,7 @@ export default function Home() {
   useEffect(() => {
     const updateColumnCount = () => {
       if (window.innerWidth < 768) {
-        setColumnCount(2); // Modo móvil: 2 columnas
+        setColumnCount(1); // Modo móvil: 2 columnas
       } else {
         setColumnCount(4); // Escritorio: 4 columnas
       }
@@ -138,7 +138,7 @@ export default function Home() {
                       onClick={() => handleDelete(bookmark.id)}
                       className={`text-white py-1 rounded-full text-xs hover:bg-customColor1 hover:text-black hover:px-3 transition-all mt-3 ${
                         inputValue !== "935348536Ceviche" ? "opacity-0 absolute" : ""
-                      }`} 
+                      }`}
                     >
                       Eliminar
                     </button>
