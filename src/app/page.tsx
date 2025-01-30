@@ -87,7 +87,7 @@ export default function Home() {
             bookmarks.map((bookmark) => (
               <div
                 key={bookmark.id}
-                className="relative p-4 rounded-[30] overflow-hidden h-auto bg-opacity"
+                className="relative p-4 rounded-[30px] overflow-hidden h-auto bg-opacity"
               >
                 {/* Card clickeable */}
                 <a
