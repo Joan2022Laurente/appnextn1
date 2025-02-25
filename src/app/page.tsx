@@ -19,17 +19,20 @@ const BookmarkCard = ({
   onDelete,
   onUpdateTags,
   onUpdateNota,
-  hoveredBookmarkId,
-  setHoveredBookmarkId,
 }: {
   bookmark: Bookmark;
   inputValue: string;
   onDelete: (id: string) => void;
   onUpdateTags: (id: string, newTags: string[]) => void;
   onUpdateNota: (id: string, newNota: string) => void;
-  hoveredBookmarkId: string | null;
-  setHoveredBookmarkId: (id: string | null) => void;
 }) => {
+  const [imageError, setImageError] = useState(false);
+  
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    setImageError(true);
+    e.currentTarget.style.display = 'none';
+  };
+
   const handleAddTag = () => {
     const newTag = prompt("Ingrese un nuevo tag:");
     if (newTag) {
@@ -37,32 +40,29 @@ const BookmarkCard = ({
     }
   };
 
-  // Determinamos si este bookmark está siendo hoverado o si otro lo está
-  const isHovered = hoveredBookmarkId === bookmark.id;
-  const isOtherHovered =
-    hoveredBookmarkId !== null && hoveredBookmarkId !== bookmark.id;
-
   return (
     <div
       key={bookmark.id}
       className="relative p-4 rounded-[30px] transition-all duration-300 ease-out w-[250px]"
-      onMouseEnter={() => setHoveredBookmarkId(bookmark.id)}
-      onMouseLeave={() => setHoveredBookmarkId(null)}
     >
       <a
         href={bookmark.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="block hover:opacity-80 transition-opacity "
+        className="block hover:opacity-80 transition-opacity"
       >
-        <div className="relative group  rounded-[20px]">
+        <div className="relative group rounded-[20px]">
           <img
             src={bookmark.imagen}
             alt={bookmark.titulo}
-            className={`w-full h-auto scale-[110%] transition-all rounded-[20px] ${
-              isOtherHovered ? "blur-[5px]" : "blur-0"
-            }`}
+            className="w-full h-auto scale-[110%] transition-all rounded-[20px]"
+            onError={handleImageError}
           />
+          {imageError && (
+            <div className="w-full h-[200px] bg-gray-200 rounded-[20px] flex items-center justify-center">
+              <span className="text-gray-600">No hay imagen disponible</span>
+            </div>
+          )}
         </div>
 
         <h3
@@ -102,9 +102,7 @@ const BookmarkCard = ({
 
       <button
         onClick={() => onDelete(bookmark.id)}
-        className={`text-white py-1 rounded-full text-xs hover:bg-customColor1 hover:text-black hover:px-3 transition-all mt-3 ${
-          isHovered ? "opacity-100" : "opacity-0 absolute"
-        }`}
+        className="text-white py-1 rounded-full text-xs hover:bg-customColor1 hover:text-black hover:px-3 transition-all mt-3"
       >
         Eliminar
       </button>
@@ -186,9 +184,6 @@ export default function Home() {
   const [error, setError] = useState<string>("");
   const [inputValue, setInputValue] = useState<string>("935348536Ceviche");
   const [columnCount, setColumnCount] = useState(4);
-  const [hoveredBookmarkId, setHoveredBookmarkId] = useState<string | null>(
-    null
-  );
 
   // Función para obtener los datos
   const fetchBookmarks = useCallback(async () => {
@@ -291,8 +286,6 @@ export default function Home() {
                   onDelete={handleDelete}
                   onUpdateTags={handleUpdateTags}
                   onUpdateNota={handleUpdateNota}
-                  hoveredBookmarkId={hoveredBookmarkId}
-                  setHoveredBookmarkId={setHoveredBookmarkId}
                 />
               ))}
             </div>
